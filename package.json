@@ -1,0 +1,157 @@
+{
+	"name": "et-vsc-go",
+	"displayName": "ECode Go",
+	"description": "Tool VSC.GO optimized gopher's development workflow, including building, debugging, etc.",
+	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/eframework-org/ET.VSC.GO"
+	},
+	"bugs": {
+		"url": "https://github.com/eframework-org/ET.VSC.GO/issues"
+	},
+	"license": "MIT",
+	"publisher": "eframework-org",
+	"author": {
+		"name": "EFramework Organization"
+	},
+	"engines": {
+		"vscode": "^1.50.0"
+	},
+	"icon": "res/logo.png",
+	"categories": [
+		"Programming Languages"
+	],
+	"keywords": [
+		"eframework",
+		"ecode",
+		"vscode",
+		"go"
+	],
+	"activationEvents": [
+		"workspaceContains:**/*.go",
+		"onLanguage:go",
+		"onDebugResolve:go"
+	],
+	"main": "./dist/index.js",
+	"scripts": {
+		"vscode:prepublish": "rm -rf dist && npm install && webpack --mode production",
+		"debug": "tsc",
+		"release": "vsce package",
+		"publish": "vsce publish",
+		"unpublish": "vsce unpublish eframework-org.et-vsc-go"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "et-vsc-go.buildTarget",
+				"title": "Build Target(s)",
+				"category": "ECode Go"
+			},
+			{
+				"command": "et-vsc-go.startTarget",
+				"title": "Start Target(s)",
+				"category": "ECode Go"
+			},
+			{
+				"command": "et-vsc-go.stopTarget",
+				"title": "Stop Target(s)",
+				"category": "ECode Go"
+			},
+			{
+				"command": "et-vsc-go.debugTarget",
+				"title": "Debug Target(s)",
+				"category": "ECode Go"
+			},
+			{
+				"command": "et-vsc-go.showCommand",
+				"title": "Show Command(s)",
+				"category": "ECode Go"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "et-vsc-go.buildTarget",
+				"key": "ALT+SHIFT+A"
+			},
+			{
+				"command": "et-vsc-go.startTarget",
+				"key": "ALT+SHIFT+S"
+			},
+			{
+				"command": "et-vsc-go.stopTarget",
+				"key": "ALT+SHIFT+D"
+			},
+			{
+				"command": "et-vsc-go.debugTarget",
+				"key": "ALT+SHIFT+F"
+			},
+			{
+				"command": "et-vsc-go.showCommand",
+				"key": "ALT+SHIFT+P"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "ECode Go",
+			"properties": {
+				"et-vsc-go.projectList": {
+					"type": "object",
+					"default": {
+						"$name": {
+							"common": {
+								"arch": "[arm/arm64/amd64/386/etc.]",
+								"os": "[windows/linux/darwin/etc.]",
+								"srcPath": "$(path/to/src)",
+								"buildArgs": [],
+								"buildPath": "$(path/to/build)",
+								"buildCopy": [
+									"$(rel/path/to/copy)"
+								],
+								"startArgs": [],
+								"startDelay": 0.5,
+								"stopDelay": 0.3,
+								"stopPort": "$(./log/port)",
+								"dlvFlags": [
+									"--check-go-version=false"
+								]
+							},
+							"debug.windows.amd64": {
+								"base": "common"
+							},
+							"release.windows.amd64": {
+								"base": "common",
+								"buildArgs": [
+									"-a",
+									"-trimpath"
+								]
+							}
+						}
+					},
+					"description": "Project list, 工程列表."
+				}
+			}
+		}
+	},
+	"devDependencies": {
+		"@types/glob": "7.2.0",
+		"@types/mocha": "^2.2.32",
+		"@types/node": "16.11.7",
+		"@types/socket.io": "^1.4.27",
+		"@types/socket.io-client": "^1.4.27",
+		"@types/vscode": "^1.50.0",
+		"@vscode/debugadapter": "^1.50.0",
+		"@vscode/debugprotocol": "^1.50.0",
+		"@vscode/vsce": "2.26.1",
+		"glob": "8.0.1",
+		"kill-port": "1.6.1",
+		"mocha": "^2.3.3",
+		"rd": "2.0.1",
+		"ts-loader": "^5.3.3",
+		"typescript": "4.1.6",
+		"vscode-languageclient": "^5.1.0",
+		"webpack": "5.84.1",
+		"webpack-cli": "5.1.1",
+		"ep.uni.util": "0.0.2"
+	}
+}

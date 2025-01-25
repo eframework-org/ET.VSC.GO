@@ -1,0 +1,12 @@
+.vscode/**
+src/**
+log/**
+node_modules/**
+**/*.map
+.gitignore
+tsconfig.json
+package-lock.json
+local/**
+webpack.config.js
+dist/index.js.map
+*.sh

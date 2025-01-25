@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "declaration": false,
+        "module": "CommonJS",
+        "target": "ES6",
+        "sourceMap": true,
+        "moduleResolution": "Node",
+        "outDir": "dist"
+    },
+    "exclude": [
+        "res",
+        "dist",
+        "test",
+        "node_modules"
+    ]
+}
