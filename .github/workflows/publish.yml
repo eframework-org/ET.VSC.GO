@@ -1,0 +1,51 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+      inputs:
+        confirm:
+          description: 'Type the repository name (owner/repo) to proceed.'
+          required: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Validate confirmation
+      if: github.event.inputs.confirm != github.repository
+      run: |
+        echo "The confirm input: ${{ github.event.inputs.confirm }} must match the repository name: ${{ github.repository }} to proceed with the publish action."
+        exit 1
+
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Install vsce
+        run: npm install -g vsce
+        
+    - name: Publish to vsce
+        env:
+          VSCE_PUBLISH: ${{ secrets.VSCE_PUBLISH }}
+        run: vsce publish --token $VSCE_PUBLISH
+
+    - name: Create and push tag
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "Creating tag v$VERSION"
+        git tag v$VERSION
+        git push origin v$VERSION
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
