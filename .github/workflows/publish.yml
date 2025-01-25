@@ -34,18 +34,18 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
     
     - name: Install vsce
-        run: npm install -g vsce
+      run: npm install -g vsce
         
     - name: Publish to vsce
-        env:
-          VSCE_PUBLISH: ${{ secrets.VSCE_PUBLISH }}
-        run: vsce publish --token $VSCE_PUBLISH
+      env:
+        VSCE_PUBLISH: ${{ secrets.VSCE_PUBLISH }}
+      run: vsce publish --token $VSCE_PUBLISH
 
     - name: Create and push tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "Creating tag v$VERSION"
-          git tag v$VERSION
-          git push origin v$VERSION
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "Creating tag v$VERSION"
+        git tag v$VERSION
+        git push origin v$VERSION
