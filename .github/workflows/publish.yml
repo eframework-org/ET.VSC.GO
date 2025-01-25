@@ -39,7 +39,7 @@ jobs:
     - name: Publish to vsce
       env:
         VSCE_PUBLISH: ${{ secrets.VSCE_PUBLISH }}
-      run: vsce publish --token $VSCE_PUBLISH
+      run: vsce publish --pat $VSCE_PUBLISH
 
     - name: Create and push tag
       env:
