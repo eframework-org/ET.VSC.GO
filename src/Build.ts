@@ -87,12 +87,7 @@ export namespace Build {
                         let root = vscode.workspace.rootPath
                         let osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
                         let exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
-                        let targetpath = ""
-                        if (target.SrcPath) {
-                            targetpath = XFile.NormalizePath(path.isAbsolute(target.SrcPath) ? target.SrcPath : path.join(root, target.SrcPath))
-                        } else {
-                            targetpath = XFile.NormalizePath(path.join(root, "src", target.Name))
-                        }
+                        let targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : path.join(root, target.ScriptPath))
                         let exepath: string = ""
                         if (target.BuildPath) {
                             exepath = path.isAbsolute(target.BuildPath) ?
@@ -157,10 +152,4 @@ export namespace Build {
             })
         }
     }
-
-    // Progress increment for each build target, 每个构建目标的进度增量.
-    const BUILD_PROGRESS_INCREMENT = 0.8;
-
-    // Delay time in milliseconds for progress bar completion, 进度条完成的延迟时间(毫秒).
-    const PROGRESS_COMPLETION_DELAY = 800;
 }

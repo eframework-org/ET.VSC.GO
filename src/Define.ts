@@ -16,7 +16,7 @@ export class Target {
     protected key: string
     protected arch: string
     protected os: string
-    protected srcPath: string
+    protected scriptPath: string
     protected buildArgs: string[]
     protected buildPath: string
     protected buildCopy: string[]
@@ -93,7 +93,7 @@ export class Target {
      * 
      * @returns Source path, 源代码路径.
      */
-    public get SrcPath(): string { return this.srcPath }
+    public get ScriptPath(): string { return this.scriptPath }
 
     /**
      * Gets the build arguments array.

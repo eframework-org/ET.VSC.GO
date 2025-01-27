@@ -26,10 +26,10 @@ VSC.GO 工具优化了Gopher们的开发流程，包括快速构建及调试等�
     "type": "object",
     "default": {
         "$name": { // [required/必要] Project name. 工程名称。
-            "common": { // [required/必要] Group name. 分组名称。
+            "base": { // [required/必要] Group name. 分组名称。
                 "arch": "[arm/arm64/amd64/386/etc.]", // [required/必要] Target arch. 目标架构。
                 "os": "[windows/linux/darwin/etc.]", // [required/必要] Target platorm. 目标平台。
-                "srcPath": "$(path/to/src)", // [optional/可选] [default: src/] Source path. 源码路径。
+                "scriptPath": "$(path/to/script)", // [required/必要] Script path. 源码路径。
                 "buildArgs": [], // [optional/可选][see go help build] Build argument. 构建参数。
                 "buildPath": "$(path/to/build)", // [optional/可选] [default: bin/] Build path. 构建路径。
                 "buildCopy": [ // [optional/可选] Copy path(relative) after build. 构建后拷贝路径(相对)。
@@ -44,10 +44,10 @@ VSC.GO 工具优化了Gopher们的开发流程，包括快速构建及调试等�
                 ]
             },
             "debug.windows.amd64": {
-                "base": "common" // [optional/可选] Inherited group. 继承分组。
+                "extends": "base" // [optional/可选] Inherited group. 继承分组。
             },
             "release.windows.amd64": {
-                "base": "common", // [optional/可选] Inherited group. 继承分组。
+                "extends": "base", // [optional/可选] Inherited group. 继承分组。
                 "buildArgs": [ // [optional/可选] Overridden option. 覆盖选项。
                     "-a",
                     "-trimpath"

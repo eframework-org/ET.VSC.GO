@@ -207,7 +207,7 @@ export function activate(context: vscode.ExtensionContext) {
                 const temp = new Map<string, Target>()
                 for (const key in otarget) {
                     const raw: Target = otarget[key]
-                    const base = temp.get(raw["base"])
+                    const base = temp.get(raw["extends"])
                     const scheme = new Target(name, key, base, raw)
                     temp.set(key, scheme)
                     if (mTargets.find(v => v.ID == scheme.ID) == null) {

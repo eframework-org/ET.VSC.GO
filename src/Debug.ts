@@ -64,12 +64,7 @@ export namespace Debug {
                             exepath = path.join(root, "bin", osarch, env, target.Name)
                         }
                         let exefile = path.join(exepath, exename)
-                        let targetpath = ""
-                        if (target.SrcPath) {
-                            targetpath = path.isAbsolute(target.SrcPath) ? target.SrcPath : path.join(root, target.SrcPath)
-                        } else {
-                            targetpath = path.join(root, "src", target.Name)
-                        }
+                        let targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : path.join(root, target.ScriptPath))
                         let cplat = target.Os == "windows" ? "win32" : target.Os
                         if (cplat != process.platform) {
                             XLog.Error("debug {0} program on {1} is not supported", cplat, process.platform)

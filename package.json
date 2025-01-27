@@ -99,10 +99,10 @@
 					"type": "object",
 					"default": {
 						"$name": {
-							"common": {
+							"base": {
 								"arch": "[arm/arm64/amd64/386/etc.]",
 								"os": "[windows/linux/darwin/etc.]",
-								"srcPath": "$(path/to/src)",
+								"scriptPath": "$(path/to/script)",
 								"buildArgs": [],
 								"buildPath": "$(path/to/build)",
 								"buildCopy": [
@@ -117,10 +117,10 @@
 								]
 							},
 							"debug.windows.amd64": {
-								"base": "common"
+								"extends": "base"
 							},
 							"release.windows.amd64": {
-								"base": "common",
+								"extends": "base",
 								"buildArgs": [
 									"-a",
 									"-trimpath"
