@@ -122,16 +122,28 @@ export namespace Build {
                                         if (stderr) XLog.Error("Build.Process({0}).stderr: {1}", target.ID, stderr)
                                         if (target.BuildCopy) {
                                             for (let i = 0; i < target.BuildCopy.length; i++) {
-                                                let src = target.BuildCopy[i]
-                                                let pat = XFile.NormalizePath(path.join(targetpath, src))
-                                                let cwd = XFile.NormalizePath(targetpath)
-                                                let gsync = new glob.GlobSync(pat)
-                                                if (gsync.found) {
-                                                    for (let i = 0; i < gsync.found.length; i++) {
-                                                        let f = gsync.found[i]
-                                                        let s = f.replace(cwd, "")
-                                                        let d = path.join(exepath, s)
-                                                        XFile.CopyFile(f, d)
+                                                let copyPath = target.BuildCopy[i]
+                                                let [src, dst] = copyPath.split(":")
+                                                if (dst) {
+                                                    let srcPath = XFile.NormalizePath(path.join(targetpath, src))
+                                                    let dstPath = XFile.NormalizePath(path.join(exepath, dst))
+                                                    let gsync = new glob.GlobSync(srcPath)
+                                                    if (gsync.found) {
+                                                        for (let f of gsync.found) {
+                                                            let finalDstPath = path.join(dstPath, path.basename(f))
+                                                            XFile.CopyFile(f, finalDstPath)
+                                                        }
+                                                    }
+                                                } else {
+                                                    let pat = XFile.NormalizePath(path.join(targetpath, copyPath))
+                                                    let cwd = XFile.NormalizePath(targetpath)
+                                                    let gsync = new glob.GlobSync(pat)
+                                                    if (gsync.found) {
+                                                        for (let f of gsync.found) {
+                                                            let s = f.replace(cwd, "")
+                                                            let d = path.join(exepath, s)
+                                                            XFile.CopyFile(f, d)
+                                                        }
                                                     }
                                                 }
                                             }

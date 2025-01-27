@@ -33,7 +33,8 @@ VSC.GO 工具优化了Gopher们的开发流程，包括快速构建及调试等�
                 "buildArgs": [], // [optional/可选][see go help build] Build argument. 构建参数。
                 "buildPath": "$(path/to/build)", // [optional/可选] [default: bin/] Build path. 构建路径。
                 "buildCopy": [ // [optional/可选] Copy path(relative) after build. 构建后拷贝路径(相对)。
-                    "$(rel/path/to/copy)"
+                    "$(path/to/copy)",  // 简单复制，保持相对路径
+                    "$(copy/from/path):$(to/path)" // 指定源路径和目标路径
                 ],
                 "startArgs": [], // [optional/可选] Start argument. 启动参数。
                 "startDelay": 0.5, // [optional/可选] Start delay time(seconds). 启动延迟(秒)。

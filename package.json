@@ -106,7 +106,8 @@
 								"buildArgs": [],
 								"buildPath": "$(path/to/build)",
 								"buildCopy": [
-									"$(rel/path/to/copy)"
+									"$(path/to/copy)",
+									"$(copy/from/path):$(to/path)"
 								],
 								"startArgs": [],
 								"startDelay": 0.5,
