@@ -122,27 +122,25 @@ export namespace Build {
                                         if (stderr) XLog.Error("Build.Process({0}).stderr: {1}", target.ID, stderr)
                                         if (target.BuildCopy) {
                                             for (let i = 0; i < target.BuildCopy.length; i++) {
-                                                let copyPath = target.BuildCopy[i]
-                                                let [src, dst] = copyPath.split(":")
-                                                if (dst) {
-                                                    let srcPath = XFile.NormalizePath(path.join(targetpath, src))
-                                                    let dstPath = XFile.NormalizePath(path.join(exepath, dst))
-                                                    let gsync = new glob.GlobSync(srcPath)
-                                                    if (gsync.found) {
+                                                let [src, dst] = target.BuildCopy[i].split(":")
+                                                src = path.isAbsolute(src) ? XFile.NormalizePath(src) : XFile.NormalizePath(path.join(root, src))
+                                                const gsync = new glob.GlobSync(src)
+                                                if (gsync.found) {
+                                                    if (XFile.HasFile(src)) { // 单文件
+                                                        const f = gsync.found[0]
+                                                        dst = dst ?
+                                                            (path.isAbsolute(dst) ? XFile.NormalizePath(dst) : XFile.PathJoin(exepath, dst)) :
+                                                            XFile.PathJoin(exepath, XFile.FileName(f))
+                                                        XFile.CopyFile(f, dst)
+                                                    } else {
+                                                        dst = dst ? (path.isAbsolute(dst) ? XFile.NormalizePath(dst) : XFile.PathJoin(exepath, dst)) : exepath
+                                                        const base = XFile.NormalizePath(src.replace(/\*.*$/, ""))
                                                         for (let f of gsync.found) {
-                                                            let finalDstPath = path.join(dstPath, path.basename(f))
-                                                            XFile.CopyFile(f, finalDstPath)
-                                                        }
-                                                    }
-                                                } else {
-                                                    let pat = XFile.NormalizePath(path.join(targetpath, copyPath))
-                                                    let cwd = XFile.NormalizePath(targetpath)
-                                                    let gsync = new glob.GlobSync(pat)
-                                                    if (gsync.found) {
-                                                        for (let f of gsync.found) {
-                                                            let s = f.replace(cwd, "")
-                                                            let d = path.join(exepath, s)
-                                                            XFile.CopyFile(f, d)
+                                                            if (XFile.HasFile(f)) {
+                                                                const rel = path.relative(base, f)
+                                                                const to = XFile.PathJoin(dst, rel)
+                                                                XFile.CopyFile(f, to)
+                                                            }
                                                         }
                                                     }
                                                 }
