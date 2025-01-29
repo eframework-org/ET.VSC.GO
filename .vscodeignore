@@ -1,6 +1,6 @@
+.github/**
 .vscode/**
 src/**
-log/**
 node_modules/**
 **/*.map
 .gitignore
