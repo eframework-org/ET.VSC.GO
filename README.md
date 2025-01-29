@@ -73,4 +73,4 @@ VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试�
 请参考 [贡献指南](CONTRIBUTING.md)。
 
 ## 许可证
-请参考 [许可证](LICENSE)。
+请参考 [许可证](LICENSE.md)。
