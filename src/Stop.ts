@@ -38,20 +38,20 @@ export namespace Stop {
                     })
 
                     // 初始化调试会话管理
-                    if (mSessions == null) {
-                        mSessions = new Map()
+                    if (sessions == null) {
+                        sessions = new Map()
                         vscode.debug.onDidStartDebugSession((session) => {
                             if (session) {
-                                if (mSessions.has(session.name)) {
-                                    mSessions.delete(session.name)
+                                if (sessions.has(session.name)) {
+                                    sessions.delete(session.name)
                                     vscode.debug.stopDebugging(session)
                                 }
-                                mSessions.set(session.name, session)
+                                sessions.set(session.name, session)
                             }
                         })
                         vscode.debug.onDidTerminateDebugSession((session) => {
                             if (session) {
-                                mSessions.delete(session.name)
+                                sessions.delete(session.name)
                             }
                         })
                     }
@@ -68,14 +68,14 @@ export namespace Stop {
                             try {
                                 if (!canceled) {
                                     // 尝试通过调试会话终止
-                                    const session = mSessions.get(target.ID)
+                                    const session = sessions.get(target.ID)
                                     if (session) {
                                         vscode.debug.stopDebugging(session).then(() => {
                                             XLog.Error("Stop.Process({0}): finish kill proc by session.", target.ID)
-                                            mSessions.delete(target.ID)
+                                            sessions.delete(target.ID)
                                         }, (e) => {
                                             XLog.Info("Stop.Process({0}): kill proc by session failed: {1}", target.ID, e)
-                                            mSessions.delete(target.ID)
+                                            sessions.delete(target.ID)
                                         })
                                         XLog.Info("Stop.Process({0}): start kill proc by session.", target.ID)
                                     }
@@ -150,5 +150,5 @@ export namespace Stop {
     }
 
     /** 用于跟踪活动调试会话的映射。 */
-    var mSessions: Map<string, vscode.DebugSession>
+    var sessions: Map<string, vscode.DebugSession>
 }

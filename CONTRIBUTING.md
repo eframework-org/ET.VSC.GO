@@ -29,7 +29,7 @@ Run and Debug -> Extension
 2. 命名规范
 - 类名：使用 PascalCase
 - 函数名：使用 PascalCase
-- 变量名：使用 mCamelCase
+- 变量名：使用 camelCase
 - 常量名：使用 UPPER_CASE
 - 文件名：使用 PascalCase
 

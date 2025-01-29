@@ -69,10 +69,10 @@ const Commands = [
 ]
 
 /** 已加载的目标配置列表。 */
-const mTargets = new Array<Target>()
+const targets = new Array<Target>()
 
 /** 目标选择器实例。 */
-var mSelector: vscode.QuickPick<vscode.QuickPickItem>
+var selector: vscode.QuickPick<vscode.QuickPickItem>
 
 /**
  * 选择目标配置。
@@ -86,7 +86,7 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
             const proj = vscode.workspace.rootPath
             const file = XFile.PathJoin(XEnv.DataPath, "selected.prefs")
             const labels = new Array<string>()
-            mTargets.forEach(v => labels.push(v.ID))
+            targets.forEach(v => labels.push(v.ID))
 
             function getLocalSelected(raws: readonly vscode.QuickPickItem[]): readonly vscode.QuickPickItem[] {
                 if (XFile.HasFile(file)) {
@@ -161,39 +161,39 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
             }
 
             function onDidAccept() {
-                if (mSelector.selectedItems) {
+                if (selector.selectedItems) {
                     const targets = new Array<Target>()
-                    for (let i = 0; i < mSelector.selectedItems.length; i++) {
-                        const label = mSelector.selectedItems[i].label
-                        for (let j = 0; j < mTargets.length; j++) {
-                            const target = mTargets[j]
+                    for (let i = 0; i < selector.selectedItems.length; i++) {
+                        const label = selector.selectedItems[i].label
+                        for (let j = 0; j < targets.length; j++) {
+                            const target = targets[j]
                             if (target.ID == label) {
                                 targets.push(target)
                                 break
                             }
                         }
                     }
-                    saveLocal(mSelector.selectedItems)
-                    mSelector.dispose()
-                    mSelector = null
+                    saveLocal(selector.selectedItems)
+                    selector.dispose()
+                    selector = null
                     resolve(targets)
                 }
             }
 
-            if (mSelector) {
+            if (selector) {
                 onDidAccept()
             } else {
-                mSelector = vscode.window.createQuickPick()
-                mSelector.canSelectMany = true
-                mSelector.placeholder = XString.Format("Select target(s) to {0}.", action)
-                mSelector.items = filterTargets().map(label => ({ label }))
-                mSelector.selectedItems = getLocalSelected(mSelector.items)
-                mSelector.onDidAccept(onDidAccept)
-                mSelector.onDidHide(() => {
-                    mSelector.dispose()
-                    mSelector = null
+                selector = vscode.window.createQuickPick()
+                selector.canSelectMany = true
+                selector.placeholder = XString.Format("Select target(s) to {0}.", action)
+                selector.items = filterTargets().map(label => ({ label }))
+                selector.selectedItems = getLocalSelected(selector.items)
+                selector.onDidAccept(onDidAccept)
+                selector.onDidHide(() => {
+                    selector.dispose()
+                    selector = null
                 })
-                mSelector.show()
+                selector.show()
             }
         } catch (err) { reject(err) }
     })
@@ -226,7 +226,7 @@ export function activate(context: vscode.ExtensionContext) {
      * 解析工作区配置，更新目标列表。
      */
     function parseConfig() {
-        mTargets.length = 0
+        targets.length = 0
         const config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(XEnv.Identifier)
         const projectList: any = config.get("projectList")
         if (projectList) {
@@ -239,8 +239,8 @@ export function activate(context: vscode.ExtensionContext) {
                     const base = temp.get(raw["extends"])
                     const scheme = new Target(name, key, base, raw)
                     temp.set(key, scheme)
-                    if (mTargets.find(v => v.ID == scheme.ID) == null) {
-                        mTargets.push(scheme)
+                    if (targets.find(v => v.ID == scheme.ID) == null) {
+                        targets.push(scheme)
                     }
                 }
             }
@@ -270,10 +270,7 @@ export function activate(context: vscode.ExtensionContext) {
     XLog.Notice("Extension has been activated.")
 }
 
-/**
- * 插件停用函数。
- */
 export function deactivate() {
-    if (mSelector) mSelector.dispose()
+    if (selector) selector.dispose()
     XLog.Notice("Extension has been deactivated.")
 }
