@@ -11,19 +11,13 @@ import { XFile, XLog, XString } from "ep.uni.util"
 import { Target } from "./Define"
 
 /**
- * Stop namespace handles all termination operations, including process killing and cleanup.
- * 
- * Stop 命名空间处理所有终止相关的操作, 包括进程终止和清理.
+ * Stop 命名空间处理所有终止相关的操作。
  */
 export namespace Stop {
     /**
-     * Process terminates running targets with progress tracking and port cleanup.
-     * The function handles debug session termination, port killing, and ensures proper cleanup of resources.
-     * 
-     * 处理运行中目标的终止过程, 包含进度跟踪和端口清理. 该函数处理调试会话终止、端口终止, 并确保资源正确清理.
-     * 
-     * @param targets Array of Target objects to terminate, 需要终止的目标数组.
-     * @returns Promise that resolves when all targets are stopped, Promise在所有目标停止时解析.
+     * 处理运行中目标的终止过程。
+     * @param targets 需要终止的目标数组。
+     * @returns Promise 在所有目标停止时解析。
      */
     export async function Process(targets: Target[]) {
         if (targets == null || targets.length == 0) {
@@ -43,6 +37,7 @@ export namespace Stop {
                         reject("Stopping target(s) has been canceled.")
                     })
 
+                    // 初始化调试会话管理
                     if (mSessions == null) {
                         mSessions = new Map()
                         vscode.debug.onDidStartDebugSession((session) => {
@@ -62,15 +57,17 @@ export namespace Stop {
                     }
 
                     const root = vscode.workspace.rootPath
-                    let totalTime = 0
-                    const incre = 1 / targets.length * 100
+                    let totalTime = 0        // 累计延迟时间
+                    const incre = 1 / targets.length * 100  // 每个目标的进度增量
 
+                    // 遍历处理每个目标
                     for (let i = 0; i < targets.length; i++) {
                         const target = targets[i]
                         const index = i
                         setTimeout(() => {
                             try {
                                 if (!canceled) {
+                                    // 尝试通过调试会话终止
                                     const session = mSessions.get(target.ID)
                                     if (session) {
                                         vscode.debug.stopDebugging(session).then(() => {
@@ -82,7 +79,14 @@ export namespace Stop {
                                         })
                                         XLog.Info("Stop.Process({0}): start kill proc by session.", target.ID)
                                     }
+
+                                    // 尝试通过端口终止
                                     if (target.StopPort) {
+                                        /**
+                                         * 获取端口文件路径。
+                                         * @param env 环境标识（debug/release）。
+                                         * @returns 返回端口文件的完整路径。
+                                         */
                                         function getPortF(env: string) {
                                             const osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
                                             const exepath = path.isAbsolute(target.BuildPath) ?
@@ -90,6 +94,8 @@ export namespace Stop {
                                                 XFile.PathJoin(root, target.BuildPath, osarch, env, target.Name)
                                             return XFile.PathJoin(exepath, target.StopPort)
                                         }
+
+                                        // 尝试读取端口文件
                                         let portf = getPortF(session ? "debug" : "release")
                                         if (!XFile.HasFile(portf)) {
                                             XLog.Error("Stop.Process({0}): kill proc failed: port file doesn't exist: {1}", target.ID, portf)
@@ -98,6 +104,7 @@ export namespace Stop {
                                         if (!XFile.HasFile(portf)) {
                                             XLog.Error("Stop.Process({0}): kill proc failed: port file doesn't exist: {1}", target.ID, portf)
                                         } else {
+                                            // 读取并处理端口列表
                                             var ctt = XFile.OpenText(portf)
                                             var lines = ctt.split("\n")
                                             for (let i = 0; i < lines.length; i++) {
@@ -128,10 +135,12 @@ export namespace Stop {
                                 progress.report({ increment: incre, message: XString.Format("{0} ({1} of {2})", target.ID, index + 1, targets.length) })
                                 if (index == targets.length - 1 || canceled) {
                                     vscode.window.showInformationMessage(XString.Format("Stop {0} target(s) done.", targets.length))
-                                    setTimeout(resolve, 800) // 等待进度条显示100%
+                                    setTimeout(resolve, 800) // 等待进度条显示完成
                                 }
                             }
                         }, totalTime * 1000)
+
+                        // 计算下一个目标的延迟时间
                         let stopDelay = target.StopDelay == null ? 0 : target.StopDelay
                         totalTime += stopDelay
                     }
@@ -140,6 +149,6 @@ export namespace Stop {
         }
     }
 
-    // Debug sessions map for tracking active sessions, 用于跟踪活动会话的调试会话映射.
+    /** 用于跟踪活动调试会话的映射。 */
     var mSessions: Map<string, vscode.DebugSession>
 }

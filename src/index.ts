@@ -4,6 +4,10 @@
 //          SEE LICENSE.md FOR MORE DETAILS        //
 //-------------------------------------------------//
 
+/**
+ * 插件入口模块，负责初始化、命令注册和生命周期管理。
+ */
+
 import * as vscode from "vscode"
 import { XEnv, XFile, XLog, XString } from "ep.uni.util"
 import { Build } from "./Build"
@@ -12,6 +16,7 @@ import { Start } from "./Start"
 import { Stop } from "./Stop"
 import { Target } from "./Define"
 
+/** 插件支持的命令列表。 */
 const Commands = [
     {
         ID: `${XEnv.Identifier}.buildTarget`,
@@ -63,9 +68,18 @@ const Commands = [
     }
 ]
 
+/** 已加载的目标配置列表。 */
 const mTargets = new Array<Target>()
+
+/** 目标选择器实例。 */
 var mSelector: vscode.QuickPick<vscode.QuickPickItem>
 
+/**
+ * 选择目标配置。
+ * @param action 当前操作名称。
+ * @param matchs 匹配条件数组。
+ * @returns 返回选中的目标配置数组。
+ */
 async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
     return new Promise<Target[]>((resolve, reject) => {
         try {
@@ -185,8 +199,16 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
     })
 }
 
+/**
+ * 获取当前平台的Go平台标识。
+ * @returns 返回 Go 平台标识字符串。
+ */
 function GoPlat(): string { return process.platform == "win32" ? "windows" : process.platform }
 
+/**
+ * 获取当前平台的Go架构标识。
+ * @returns 返回 Go 架构标识字符串。
+ */
 function GoArch(): string {
     // nodejs-arch:'arm'、'arm64'、'ia32'、'mips'、'mipsel'、'ppc'、'ppc64'、's390'、's390x'、'x64'
     let arch = process.arch as string
@@ -195,7 +217,14 @@ function GoArch(): string {
     return arch
 }
 
+/**
+ * 插件激活入口函数。
+ * @param context VSCode扩展上下文。
+ */
 export function activate(context: vscode.ExtensionContext) {
+    /**
+     * 解析工作区配置，更新目标列表。
+     */
     function parseConfig() {
         mTargets.length = 0
         const config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(XEnv.Identifier)
@@ -218,14 +247,19 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }
 
+    // 初始化配置
     parseConfig()
+
+    // 监听配置变化
     vscode.workspace.onDidChangeConfiguration(() => parseConfig())
 
+    // 注册命令
     for (let i = 0; i < Commands.length; i++) {
         const meta = Commands[i]
         vscode.commands.registerCommand(meta.ID, meta.Handler)
     }
 
+    // 创建状态栏项
     const bar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right)
     context.subscriptions.push(bar)
     bar.tooltip = XEnv.Description
@@ -236,6 +270,9 @@ export function activate(context: vscode.ExtensionContext) {
     XLog.Notice("Extension has been activated.")
 }
 
+/**
+ * 插件停用函数。
+ */
 export function deactivate() {
     if (mSelector) mSelector.dispose()
     XLog.Notice("Extension has been deactivated.")

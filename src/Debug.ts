@@ -11,19 +11,13 @@ import { XFile, XLog, XString } from "ep.uni.util"
 import { Target } from "./Define"
 
 /**
- * Debug namespace handles all debugging operations, including launching, attaching, and managing debug sessions.
- * 
- * Debug 命名空间处理所有调试相关的操作, 包括启动、附加和管理调试会话.
+ * Debug 命名空间处理所有调试相关的操作。
  */
 export namespace Debug {
     /**
-     * Process launches debug sessions for multiple targets with progress tracking.
-     * The function handles debug configurations, permissions, and session management.
-     * 
-     * 处理多个目标的调试会话启动, 包含进度跟踪. 该函数处理调试配置、权限和会话管理.
-     * 
-     * @param targets Array of Target objects containing debug configurations, 目标数组包含调试配置信息.
-     * @returns Promise that resolves when all debug sessions start, Promise在所有调试会话启动时解析.
+     * 处理多个目标的调试会话启动。
+     * @param targets 目标配置数组。
+     * @returns Promise 在所有调试会话启动时解析。
      */
     export function Process(targets: Target[]) {
         if (targets == null || targets.length == 0) {
@@ -43,9 +37,13 @@ export namespace Debug {
                         reject("Debugging target(s) has been canceled.")
                     })
 
-                    const env = "debug"
-                    const incre = 1 / targets.length * 100
+                    const env = "debug"     // 调试环境标识
+                    const incre = 1 / targets.length * 100  // 每个目标的进度增量
 
+                    /**
+                     * 处理下一个调试目标。
+                     * @param idx 当前处理的目标索引。
+                     */
                     function processNext(idx: number) {
                         if (canceled) return
 
@@ -53,6 +51,7 @@ export namespace Debug {
                         let target = targets[idx]
                         progress.report({ increment: incre, message: XString.Format("{0} ({1} of {2})", target.ID, idx + 1, targets.length) })
 
+                        // 准备调试环境和路径
                         const osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
                         const exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
                         const exepath = path.isAbsolute(target.BuildPath) ?
@@ -60,6 +59,8 @@ export namespace Debug {
                             XFile.PathJoin(root, target.BuildPath, osarch, env, target.Name)
                         const exefile = XFile.PathJoin(exepath, exename)
                         const targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : XFile.PathJoin(root, target.ScriptPath))
+
+                        // 检查平台兼容性
                         const cplat = target.Os == "windows" ? "win32" : target.Os
                         if (cplat != process.platform) {
                             XLog.Error("debug {0} program on {1} is not supported", cplat, process.platform)
@@ -67,14 +68,15 @@ export namespace Debug {
                             XLog.Error("Debug.Process: {0} doesn't exist", exefile)
                         } else {
                             try {
-                                if (process.platform == "darwin") {
-                                    child_process.execSync(XString.Format("chmod -R 777 {0}", exepath))
-                                } else if (process.platform == "linux") {
+                                // 设置执行权限
+                                if (process.platform == "darwin" || process.platform == "linux") {
                                     child_process.execSync(XString.Format("chmod -R 777 {0}", exepath))
                                 }
                             } catch (err) {
                                 XLog.Error("Debug.Process: chmod {0} err: {1}", targetpath, err)
                             }
+
+                            // 启动调试会话
                             setTimeout(() => {
                                 vscode.debug.startDebugging(vscode.workspace.workspaceFolders[0], {
                                     "name": target.ID,
@@ -89,13 +91,13 @@ export namespace Debug {
                                     if (idx < targets.length - 1) processNext(idx + 1)
                                     else {
                                         vscode.window.showInformationMessage(XString.Format("Debug {0} target(s) done.", targets.length))
-                                        setTimeout(resolve, 800) // 等待进度条显示100%
+                                        setTimeout(resolve, 800) // 等待进度条显示完成
                                     }
                                 }, () => {
                                     if (idx < targets.length - 1) processNext(idx + 1)
                                     else {
                                         vscode.window.showInformationMessage(XString.Format("Debug {0} target(s) done.", targets.length))
-                                        setTimeout(resolve, 800) // 等待进度条显示100%
+                                        setTimeout(resolve, 800) // 等待进度条显示完成
                                     }
                                 })
                             }, target.StartDelay == null || idx == 0 ? 0 : target.StartDelay * 1000)
