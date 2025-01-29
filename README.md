@@ -1,15 +1,16 @@
 # ET.VSC.GO
 [![Version](https://img.shields.io/visual-studio-marketplace/v/eframework-org.et-vsc-go)](https://marketplace.visualstudio.com/items?itemName=eframework-org.et-vsc-go)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/eframework-org.et-vsc-go)](vscode:extension/eframework-org.et-vsc-go)  
-VSC.GO 工具优化了Gopher们的开发流程，包括快速构建及调试等。
+VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试等。
 
 ## 功能特性
+- 快速构建和调试
+- 支持多目标配置
+- 支持资源文件复制
 - 多平台支持
   | Windows/WSL | Linux | OSX |
   | :-: | :-: | :-: |
   | ✅ | ✅ | ✅ |
-
-- 快速构建及调试
 
 ## 操作手册
 ### 功能清单
@@ -20,38 +21,41 @@ VSC.GO 工具优化了Gopher们的开发流程，包括快速构建及调试等�
 - Show Command(s): 控制面板[Alt+Shift+P]
 
 ### 配置说明
-```
-"et-vsc-go.projectList": { // [必要] 工程列表。
-    "type": "object",
-    "default": {
-        "$name": { // [必要] 工程名称。
-            "base": { // [必要] 分组名称。
-                "arch": "[arm/arm64/amd64/386/etc.]", // [必要] 目标架构。
-                "os": "[windows/linux/darwin/etc.]", // [必要] 目标平台。
-                "scriptPath": "$(path/to/script)", // [必要] 源码路径。
-                "buildPath": "$(path/to/build)", // [必要] 构建路径。
-                "buildArgs": [], // [可选] 构建参数，参考：go help build。
-                "buildCopy": [ // [可选] 构建后拷贝路径。
-                    "$(path/to/copy)",  // 简单复制，保持相对路径。
-                    "$(copy/from/path):$(to/path)" // 指定源路径和目标路径。
-                ],
-                "startArgs": [], // [可选] 启动参数。
-                "startDelay": 0.5, // [可选] 启动延迟（秒）。
-                "stopDelay": 0.3, // [可选] 终止延迟（秒）。
-                "stopPort": "$(./port/file)", // [可选] 终止端口文件。
-                "dlvFlags": [ // [可选] 调试参数。
-                    "--check-go-version=false"
+| 字段 | 必要 | 说明 |
+| --- | :---: | --- |
+| extends |  | 继承分组 |
+| arch | ✓ | 目标架构：arm/arm64/amd64/386 等 |
+| os | ✓ | 目标平台：windows/linux/darwin 等 |
+| scriptPath | ✓ | 源码路径 |
+| buildPath | ✓ | 构建输出路径 |
+| buildArgs |  | 构建参数，参考：go help build |
+| buildCopy |  | 构建后复制的文件，支持 glob 和路径映射 |
+| startArgs |  | 启动参数 |
+| startDelay |  | 启动延迟（秒） |
+| stopDelay |  | 停止延迟（秒） |
+| stopPort |  | 端口文件路径 |
+| dlvFlags |  | 调试参数 |
+
+```json
+{
+    "et-vsc-go.projectList": {
+        "greet": {
+            "base": {
+                "arch": "amd64",
+                "os": "windows",
+                "scriptPath": "src/main",
+                "buildPath": "bin",
+                "buildCopy": [
+                    "configs/*.json",
+                    "assets/data:resources"
                 ]
             },
             "debug.windows.amd64": {
-                "extends": "base" // [可选] 继承分组。
+                "extends": "base"
             },
             "release.windows.amd64": {
-                "extends": "base", // [可选] 继承分组。
-                "buildArgs": [ // [可选] 覆盖选项。
-                    "-a",
-                    "-trimpath"
-                ]
+                "extends": "base",
+                "buildArgs": ["-trimpath"]
             }
         }
     }
@@ -59,3 +63,13 @@ VSC.GO 工具优化了Gopher们的开发流程，包括快速构建及调试等�
 ```
 
 ## 常见问题
+如有问题，请参考 [问题反馈](CONTRIBUTING.md#问题反馈)。
+
+## 更新记录
+请参考 [更新记录](CHANGELOG.md)。
+
+## 贡献指南
+请参考 [贡献指南](CONTRIBUTING.md)。
+
+## 许可证
+请参考 [许可证](LICENSE)。

@@ -1,9 +1,7 @@
 # 贡献指南
-
 感谢您考虑为 ET.VSC.GO 项目做出贡献！
 
 ## 开发环境
-
 1. 克隆仓库
 ```bash
 git clone https://github.com/eframework-org/ET.VSC.GO.git
@@ -21,7 +19,6 @@ Run and Debug -> Extension
 ```
 
 ## 代码规范
-
 1. 代码风格
 - 使用 TypeScript 编写
 - 使用 4 空格缩进
@@ -42,7 +39,6 @@ Run and Debug -> Extension
 - 复杂逻辑需要添加详细注释说明
 
 ## 提交规范
-
 1. 分支命名
 - 功能分支：`feature/功能名称`
 - 修复分支：`fix/问题描述`
@@ -79,7 +75,6 @@ Closes #123
 ```
 
 ## 测试规范
-
 1. 测试覆盖
 - 新功能必须包含对应的测试用例
 - 修复问题时需要添加相关的测试用例
@@ -90,7 +85,6 @@ Closes #123
 - 使用 XTest 测试框架
 
 ## 发布流程
-
 1. 版本号规范
 - 遵循 Semantic Versioning 2.0.0
 - 格式：`主版本号.次版本号.修订号`
@@ -101,7 +95,6 @@ Closes #123
 - 发布到商店：Run workflow [Publish](https://github.com/eframework-org/ET.VSC.GO/actions/workflows/publish.yml)
 
 ## 问题反馈
-
 1. 提交问题前：
 - 搜索现有 issues 避免重复
 - 确认问题可以稳定重现
@@ -135,5 +128,4 @@ Closes #123
 - [示例代码](https://github.com/microsoft/vscode-extension-samples)
 
 ## 许可证
-
 通过提交代码，您同意将您的代码贡献置于 [MIT 许可证](LICENSE.md)之下。 
