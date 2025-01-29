@@ -89,7 +89,30 @@ Closes #123
 - 遵循 Semantic Versioning 2.0.0
 - 格式：`主版本号.次版本号.修订号`
 
-2. 发布步骤
+2. 更新记录规范
+- 使用年月日格式：`YYYY-MM-DD`
+- 按版本号降序排列
+- 分类记录变更内容：
+  ```markdown
+  ## [1.0.0] - 2024-03-21
+  ### 新增
+  - 添加了新功能 A
+  - 添加了新功能 B
+  
+  ### 优化
+  - 优化了功能 C 的性能
+  - 改进了功能 D 的用户体验
+  
+  ### 修复
+  - 修复了问题 E
+  - 修复了问题 F
+  
+  ### 变更
+  - 调整了配置项 G
+  - 更新了依赖库版本
+  ```
+
+3. 发布步骤
 - 更新版本号：npm version patch/minor/major
 - 构建发布包：npm run release
 - 发布到商店：Run workflow [Publish](https://github.com/eframework-org/ET.VSC.GO/actions/workflows/publish.yml)
