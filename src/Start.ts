@@ -9,6 +9,7 @@ import * as path from "path"
 import * as child_process from "child_process"
 import { XLog, XString, XUtility } from "ep.uni.util"
 import { Target } from "./Define"
+import { XFile } from "ep.uni.util"
 
 /**
  * Start namespace handles all startup operations, including process launching and initialization.
@@ -53,19 +54,14 @@ export namespace Start {
                         const root = vscode.workspace.rootPath
                         const osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
                         const exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
-                        let exepath: string = ""
-                        if (target.BuildPath) {
-                            exepath = path.isAbsolute(target.BuildPath) ?
-                                path.join(target.BuildPath, osarch, envstr, target.Name) :
-                                path.join(root, target.BuildPath, osarch, envstr, target.Name)
-                        } else {
-                            exepath = path.join(root, "bin", osarch, envstr, target.Name)
-                        }
-                        const exefile = path.join(exepath, exename)
+                        const exepath = path.isAbsolute(target.BuildPath) ?
+                            XFile.PathJoin(target.BuildPath, osarch, envstr, target.Name) :
+                            XFile.PathJoin(root, target.BuildPath, osarch, envstr, target.Name)
+                        const exefile = XFile.PathJoin(exepath, exename)
                         setTimeout(() => {
                             try {
                                 if (!canceled) {
-                                    let cplat = target.Os == "windows" ? "win32" : target.Os
+                                    const cplat = target.Os == "windows" ? "win32" : target.Os
                                     if (cplat != process.platform) {
                                         XLog.Error("Start.Process({0}): program on {1} was not supported.", cplat, process.platform)
                                     } else {

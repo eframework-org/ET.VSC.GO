@@ -74,26 +74,21 @@ export namespace Stop {
                                     const session = mSessions.get(target.ID)
                                     if (session) {
                                         vscode.debug.stopDebugging(session).then(() => {
-                                            XLog.Error("Stop.Process({0}): finish kill proc by session", target.ID)
+                                            XLog.Error("Stop.Process({0}): finish kill proc by session.", target.ID)
                                             mSessions.delete(target.ID)
                                         }, (e) => {
                                             XLog.Info("Stop.Process({0}): kill proc by session failed: {1}", target.ID, e)
                                             mSessions.delete(target.ID)
                                         })
-                                        XLog.Info("Stop.Process({0}): start kill proc by session", target.ID)
+                                        XLog.Info("Stop.Process({0}): start kill proc by session.", target.ID)
                                     }
                                     if (target.StopPort) {
                                         function getPortF(env: string) {
-                                            let osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
-                                            let exepath: string = ""
-                                            if (target.BuildPath) {
-                                                exepath = path.isAbsolute(target.BuildPath) ?
-                                                    path.join(target.BuildPath, osarch, env, target.Name) :
-                                                    path.join(root, target.BuildPath, osarch, env, target.Name)
-                                            } else {
-                                                exepath = path.join(root, "bin", osarch, env, target.Name)
-                                            }
-                                            return path.join(exepath, target.StopPort)
+                                            const osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
+                                            const exepath = path.isAbsolute(target.BuildPath) ?
+                                                XFile.PathJoin(target.BuildPath, osarch, env, target.Name) :
+                                                XFile.PathJoin(root, target.BuildPath, osarch, env, target.Name)
+                                            return XFile.PathJoin(exepath, target.StopPort)
                                         }
                                         let portf = getPortF(session ? "debug" : "release")
                                         if (!XFile.HasFile(portf)) {

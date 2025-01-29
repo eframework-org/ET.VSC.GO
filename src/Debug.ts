@@ -53,19 +53,14 @@ export namespace Debug {
                         let target = targets[idx]
                         progress.report({ increment: incre, message: XString.Format("{0} ({1} of {2})", target.ID, idx + 1, targets.length) })
 
-                        let osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
-                        let exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
-                        let exepath: string = ""
-                        if (target.BuildPath) {
-                            exepath = path.isAbsolute(target.BuildPath) ?
-                                path.join(target.BuildPath, osarch, env, target.Name) :
-                                path.join(root, target.BuildPath, osarch, env, target.Name)
-                        } else {
-                            exepath = path.join(root, "bin", osarch, env, target.Name)
-                        }
-                        let exefile = path.join(exepath, exename)
-                        let targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : path.join(root, target.ScriptPath))
-                        let cplat = target.Os == "windows" ? "win32" : target.Os
+                        const osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
+                        const exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
+                        const exepath = path.isAbsolute(target.BuildPath) ?
+                            XFile.PathJoin(target.BuildPath, osarch, env, target.Name) :
+                            XFile.PathJoin(root, target.BuildPath, osarch, env, target.Name)
+                        const exefile = XFile.PathJoin(exepath, exename)
+                        const targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : XFile.PathJoin(root, target.ScriptPath))
+                        const cplat = target.Os == "windows" ? "win32" : target.Os
                         if (cplat != process.platform) {
                             XLog.Error("debug {0} program on {1} is not supported", cplat, process.platform)
                         } else if (XFile.HasFile(exefile) == false) {

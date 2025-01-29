@@ -1,7 +1,7 @@
 {
 	"name": "et-vsc-go",
 	"displayName": "ECode Go",
-	"description": "Tool VSC.GO optimized gopher's development workflow, including building, debugging, etc.",
+	"description": "VSC.GO 工具优化了Gopher们的开发流程，包括快速构建及调试等。",
 	"version": "0.0.1",
 	"repository": {
 		"type": "git",
@@ -103,8 +103,8 @@
 								"arch": "[arm/arm64/amd64/386/etc.]",
 								"os": "[windows/linux/darwin/etc.]",
 								"scriptPath": "$(path/to/script)",
-								"buildArgs": [],
 								"buildPath": "$(path/to/build)",
+								"buildArgs": [],
 								"buildCopy": [
 									"$(path/to/copy)",
 									"$(copy/from/path):$(to/path)"
@@ -112,7 +112,7 @@
 								"startArgs": [],
 								"startDelay": 0.5,
 								"stopDelay": 0.3,
-								"stopPort": "$(./log/port)",
+								"stopPort": "$(./port/file)",
 								"dlvFlags": [
 									"--check-go-version=false"
 								]
@@ -129,7 +129,7 @@
 							}
 						}
 					},
-					"description": "Project list, 工程列表."
+					"description": "工程列表。"
 				}
 			}
 		}

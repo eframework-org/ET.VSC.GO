@@ -83,20 +83,15 @@ export namespace Build {
                         target = targets[index]
                         progress.report({ increment: incre * 0.2, message: XString.Format("{0} ({1} of {2})", target.ID, done + 1, targets.length) })
 
-                        let envstr = debug ? "debug" : "release"
-                        let root = vscode.workspace.rootPath
-                        let osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
-                        let exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
-                        let targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : path.join(root, target.ScriptPath))
-                        let exepath: string = ""
-                        if (target.BuildPath) {
-                            exepath = path.isAbsolute(target.BuildPath) ?
-                                path.join(target.BuildPath, osarch, envstr, target.Name) :
-                                path.join(root, target.BuildPath, osarch, envstr, target.Name)
-                        } else {
-                            exepath = path.join(root, "bin", osarch, envstr, target.Name)
-                        }
-                        let exefile = path.join(exepath, exename)
+                        const envstr = debug ? "debug" : "release"
+                        const root = vscode.workspace.rootPath
+                        const osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
+                        const exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
+                        const targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : XFile.PathJoin(root, target.ScriptPath))
+                        const exepath = path.isAbsolute(target.BuildPath) ?
+                            XFile.PathJoin(target.BuildPath, osarch, envstr, target.Name) :
+                            XFile.PathJoin(root, target.BuildPath, osarch, envstr, target.Name)
+                        const exefile = XFile.PathJoin(exepath, exename)
 
                         let cmd = debug ?
                             "go build -gcflags=\"all=-N -l\"" :
@@ -123,7 +118,7 @@ export namespace Build {
                                         if (target.BuildCopy) {
                                             for (let i = 0; i < target.BuildCopy.length; i++) {
                                                 let [src, dst] = target.BuildCopy[i].split(":")
-                                                src = path.isAbsolute(src) ? XFile.NormalizePath(src) : XFile.NormalizePath(path.join(root, src))
+                                                src = path.isAbsolute(src) ? XFile.NormalizePath(src) : XFile.NormalizePath(XFile.PathJoin(root, src))
                                                 const gsync = new glob.GlobSync(src)
                                                 if (gsync.found) {
                                                     if (XFile.HasFile(src)) { // 单文件
