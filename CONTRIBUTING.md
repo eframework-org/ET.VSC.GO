@@ -34,7 +34,7 @@ Run and Debug -> Extension
 - 文件名：使用 PascalCase
 
 3. 注释规范
-- 使用 **JSDoc** 标准编写中文注释
+- 使用 **JSDoc** 标准编写**中文**注释
 - 所有公开 API 必须包含注释
 - 复杂逻辑需要添加详细注释说明
 
