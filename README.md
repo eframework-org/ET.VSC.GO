@@ -9,11 +9,11 @@ VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试�
 
 ## 操作手册
 ### 功能清单
-- Build Target(s): 编译应用[Alt+Shift+A]
-- Start Target(s): 运行应用[Alt+Shift+S]
-- Stop Target(s): 停止应用[Alt+Shift+D]
-- Debug Target(s): 调试应用[Alt+Shift+F]
-- Show Command(s): 控制面板[Alt+Shift+P]
+- Build Target(s): 编译应用 [⎇⇧A]
+- Start Target(s): 运行应用 [⎇⇧S]
+- Stop Target(s): 停止应用 [⎇⇧D]
+- Debug Target(s): 调试应用 [⎇⇧F]
+- Show Command(s): 控制面板 [⎇⇧P]
 
 ### 配置说明
 | 字段 | 必要 | 说明 |
