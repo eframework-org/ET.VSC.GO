@@ -151,4 +151,4 @@ Closes #123
 - [示例代码](https://github.com/microsoft/vscode-extension-samples)
 
 ## 许可证
-通过提交代码，您同意将您的代码贡献置于 [MIT 许可证](LICENSE.md)之下。 
+通过提交代码，您同意将您的代码贡献置于 [MIT 许可证](LICENSE)之下。 
