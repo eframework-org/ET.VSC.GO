@@ -24,7 +24,6 @@ VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试�
 
 | 字段 | 必要 | 说明 |
 | --- | :---: | --- |
-| extends | ➖ | 拓展分组 |
 | arch | ✅ | 目标架构：arm/arm64/amd64/386 等 |
 | os | ✅ | 目标平台：windows/linux/darwin 等 |
 | scriptPath | ✅ | 源码路径 |
@@ -36,6 +35,7 @@ VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试�
 | stopDelay | ➖ | 停止延迟（秒） |
 | stopPort | ➖ | 端口文件路径 |
 | dlvFlags | ➖ | 调试参数 |
+| extends | ➖ | 拓展配置 |
 
 ### 配置示例
 
