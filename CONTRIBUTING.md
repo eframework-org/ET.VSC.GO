@@ -262,7 +262,7 @@ code --install-extension *.vsix
 
 ## 问题反馈
 1. 提交问题前：
-- 搜索现有 issues 避免重复
+- 搜索现有 [issues](https://github.com/eframework-org/ET.VSC.GO/issues) 避免重复
 - 确认问题可以稳定重现
 - 收集必要的环境信息
 
