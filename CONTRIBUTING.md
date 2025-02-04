@@ -14,9 +14,9 @@ npm install
 ```
 
 3. 开发调试
-```bash
-Run and Debug -> Extension
-```
+- 在 VSCode/Cursor 中打开项目
+- 按 F5 启动调试
+- 在新窗口中测试插件
 
 ## 代码规范
 1. 代码风格
@@ -34,7 +34,7 @@ Run and Debug -> Extension
 - 文件名：使用 PascalCase
 
 3. 注释规范
-- 使用 **JSDoc** 标准编写**中文**注释
+- 基于 [JSDoc](https://jsdoc.app/) 标准，首选语言为**中文**
 - 所有公开 API 必须包含注释
 - 复杂逻辑需要添加详细注释说明
 
@@ -82,12 +82,13 @@ Closes #123
 
 2. 测试用例编写
 - 测试文件命名：`*.Test.ts`
-- 使用 XTest 测试框架
+- 使用 [EP.UNI.UTIL/XTest](https://github.com/eframework-org/EP.UNI.UTIL) 测试框架
 
 ## 发布流程
 1. 版本号规范
-- 遵循 Semantic Versioning 2.0.0
+- 遵循 [语义化版本](https://semver.org/lang/zh-CN/) 2.0.0
 - 格式：`主版本号.次版本号.修订号`
+- 示例：`1.0.0`、`1.2.3`
 
 2. 更新记录规范
 - 使用年月日格式：`YYYY-MM-DD`
@@ -113,8 +114,8 @@ Closes #123
   ```
 
 3. 发布步骤
-- 更新版本号：npm version patch/minor/major
-- 构建发布包：npm run release
+- 更新版本号：`npm version patch/minor/major`
+- 构建发布包：`npm run release`
 - 发布到商店：Run workflow [Publish](https://github.com/eframework-org/ET.VSC.GO/actions/workflows/publish.yml)
 
 ## 问题反馈
@@ -140,9 +141,9 @@ Closes #123
 [描述实际的结果]
 
 ### 环境信息
-- VSCode 版本：
-- 操作系统：
-- 插件版本：
+- VSCode 版本：如 1.80.2
+- 操作系统：如 Windows 11
+- 插件版本：如 0.0.1
 ```
 
 ## 相关链接
@@ -151,4 +152,4 @@ Closes #123
 - [示例代码](https://github.com/microsoft/vscode-extension-samples)
 
 ## 许可证
-通过提交代码，您同意将您的代码贡献置于 [MIT 许可证](LICENSE)之下。 
+通过提交代码，您同意将您的代码贡献置于 [MIT 许可证](LICENSE) 之下。 
