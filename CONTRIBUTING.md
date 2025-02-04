@@ -124,11 +124,11 @@
 
 ## 代码规范
 1. 代码风格
-- 使用 TypeScript 编写
-- 使用 4 空格缩进
+- 使用 TypeScript 语言编写
+- 使用 4 空格缩进代码
 - 无需使用分号结束语句
 - 使用双引号作为字符串引号
-- 函数、方法、类之间及文件末尾保留一个空行
+- 版权声明、类、函数之间及文件末尾保留一个空行
 
 2. 命名规范
 - 类名：使用 PascalCase
@@ -142,12 +142,19 @@
 - 所有公开 API 必须包含注释
 - 复杂逻辑需要添加详细注释说明
 - 遵循 [文档规范](#文档规范) 中的语言规范及标点规范
+- 代码源文件抬头必须包含版权声明
+```
+// Copyright (c) 2025 EFramework Organization. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
+```
 
 ## 提交规范
 1. 分支命名
 - 功能分支：`feature/功能名称`
 - 修复分支：`fix/问题描述`
 - 优化分支：`optimize/优化内容`
+
 
 2. 提交信息
 - 遵循 [文档规范](#文档规范) 中的语言规范及标点规范
