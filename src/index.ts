@@ -1,8 +1,6 @@
-//-------------------------------------------------//
-//                    MIT License                  //
-//    Copyright (c) 2025 EFramework Organization   //
-//          SEE LICENSE.md FOR MORE DETAILS        //
-//-------------------------------------------------//
+// Copyright (c) 2025 EFramework Organization. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
 
 /**
  * 插件入口模块，负责初始化、命令注册和生命周期管理。
