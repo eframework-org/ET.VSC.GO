@@ -2,7 +2,7 @@
 	"name": "et-vsc-go",
 	"displayName": "ECode Go",
 	"description": "VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试等。",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/eframework-org/ET.VSC.GO"
