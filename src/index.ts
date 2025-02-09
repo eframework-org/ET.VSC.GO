@@ -160,13 +160,13 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
 
             function onDidAccept() {
                 if (selector.selectedItems) {
-                    const targets = new Array<Target>()
+                    const selected = new Array<Target>()
                     for (let i = 0; i < selector.selectedItems.length; i++) {
                         const label = selector.selectedItems[i].label
                         for (let j = 0; j < targets.length; j++) {
                             const target = targets[j]
                             if (target.ID == label) {
-                                targets.push(target)
+                                selected.push(target)
                                 break
                             }
                         }
@@ -174,7 +174,7 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
                     saveLocal(selector.selectedItems)
                     selector.dispose()
                     selector = null
-                    resolve(targets)
+                    resolve(selected)
                 }
             }
 
