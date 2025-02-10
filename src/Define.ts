@@ -6,6 +6,7 @@ import { XString } from "ep.uni.util"
 
 /**
  * Target 类定义了构建和调试目标的配置结构。
+ * 用于管理目标的所有配置属性，支持配置继承。
  */
 export class Target {
     /** 目标名称。 */

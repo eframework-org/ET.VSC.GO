@@ -10,8 +10,13 @@ import { Target } from "./Define"
 
 /**
  * Stop 命名空间处理所有终止相关的操作。
+ * 提供目标程序的停止、端口释放等功能。
+ * @namespace
  */
 export namespace Stop {
+    /** 用于跟踪活动调试会话的映射。 */
+    var sessions: Map<string, vscode.DebugSession>
+
     /**
      * 处理运行中目标的终止过程。
      * @param targets 需要终止的目标数组。
@@ -146,7 +151,4 @@ export namespace Stop {
             })
         }
     }
-
-    /** 用于跟踪活动调试会话的映射。 */
-    var sessions: Map<string, vscode.DebugSession>
 }

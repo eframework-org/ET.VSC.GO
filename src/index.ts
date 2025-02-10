@@ -4,6 +4,7 @@
 
 /**
  * 插件入口模块，负责初始化、命令注册和生命周期管理。
+ * @module index
  */
 
 import * as vscode from "vscode"
@@ -18,6 +19,7 @@ import { Target } from "./Define"
 const Commands = [
     {
         ID: `${XEnv.Identifier}.buildTarget`,
+        /** 处理构建目标的命令。 */
         Handler: async () => {
             const targets = await Selects("build", "release")
             await Build.Process(targets, false)
@@ -25,6 +27,7 @@ const Commands = [
     },
     {
         ID: `${XEnv.Identifier}.startTarget`,
+        /** 处理启动目标的命令。 */
         Handler: async () => {
             const targets = await Selects("start", "release", GoArch(), GoPlat())
             await Stop.Process(targets)
@@ -33,6 +36,7 @@ const Commands = [
     },
     {
         ID: `${XEnv.Identifier}.stopTarget`,
+        /** 处理停止目标的命令。 */
         Handler: async () => {
             const targets = await Selects("stop", "debug", GoArch(), GoPlat())
             await Stop.Process(targets)
@@ -40,6 +44,7 @@ const Commands = [
     },
     {
         ID: `${XEnv.Identifier}.debugTarget`,
+        /** 处理调试目标的命令。 */
         Handler: async () => {
             const targets = await Selects("debug", "debug", GoArch(), GoPlat())
             await Stop.Process(targets)
@@ -49,6 +54,7 @@ const Commands = [
     },
     {
         ID: `${XEnv.Identifier}.showCommand`,
+        /** 显示命令面板的命令。 */
         Handler: async () => {
             try {
                 const pkg = vscode.extensions.getExtension(`${XEnv.Author}.${XEnv.Identifier}`).packageJSON
@@ -86,6 +92,11 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
             const labels = new Array<string>()
             targets.forEach(v => labels.push(v.ID))
 
+            /**
+             * 获取本地已选择的目标配置。
+             * @param raws 原始目标配置列表。
+             * @returns 返回已选择的目标配置列表。
+             */
             function getLocalSelected(raws: readonly vscode.QuickPickItem[]): readonly vscode.QuickPickItem[] {
                 if (XFile.HasFile(file)) {
                     let pick = XFile.OpenFile(file)
@@ -118,6 +129,10 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
                 return raws
             }
 
+            /**
+             * 保存本地选择的目标配置。
+             * @param raws 需要保存的目标配置列表。
+             */
             function saveLocal(raws: readonly vscode.QuickPickItem[]) {
                 let allObjs = {}
                 if (XFile.HasFile(file)) {
@@ -132,6 +147,10 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
                 XFile.SaveText(file, str)
             }
 
+            /**
+             * 根据匹配条件过滤目标配置。
+             * @returns 返回符合条件的目标配置列表。
+             */
             function filterTargets(): string[] {
                 const targets = new Array<string>()
                 for (let i = 0; i < labels.length; i++) {
@@ -158,6 +177,9 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
                 return targets
             }
 
+            /**
+             * 处理目标选择确认事件。
+             */
             function onDidAccept() {
                 if (selector.selectedItems) {
                     const selected = new Array<Target>()
@@ -198,14 +220,8 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
 }
 
 /**
- * 获取当前平台的Go平台标识。
- * @returns 返回 Go 平台标识字符串。
- */
-function GoPlat(): string { return process.platform == "win32" ? "windows" : process.platform }
-
-/**
- * 获取当前平台的Go架构标识。
- * @returns 返回 Go 架构标识字符串。
+ * 获取当前 Go 环境的目标架构。
+ * @returns 返回目标架构字符串。
  */
 function GoArch(): string {
     // nodejs-arch:'arm'、'arm64'、'ia32'、'mips'、'mipsel'、'ppc'、'ppc64'、's390'、's390x'、'x64'
@@ -216,12 +232,18 @@ function GoArch(): string {
 }
 
 /**
+ * 获取当前 Go 环境的目标平台。
+ * @returns 返回目标平台字符串。
+ */
+function GoPlat(): string { return process.platform == "win32" ? "windows" : process.platform }
+
+/**
  * 插件激活入口函数。
- * @param context VSCode扩展上下文。
+ * @param context 插件上下文。
  */
 export function activate(context: vscode.ExtensionContext) {
     /**
-     * 解析工作区配置，更新目标列表。
+     * 解析并加载配置。
      */
     function parseConfig() {
         targets.length = 0
@@ -268,6 +290,9 @@ export function activate(context: vscode.ExtensionContext) {
     XLog.Notice("Extension has been activated.")
 }
 
+/**
+ * 插件停用函数。
+ */
 export function deactivate() {
     if (selector) selector.dispose()
     XLog.Notice("Extension has been deactivated.")

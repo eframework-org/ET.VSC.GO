@@ -11,6 +11,8 @@ import { Target } from "./Define"
 
 /**
  * Build 命名空间处理所有构建相关的操作。
+ * 提供目标的编译、资源复制等功能。
+ * @namespace
  */
 export namespace Build {
     /**

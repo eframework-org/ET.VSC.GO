@@ -11,6 +11,8 @@ import { XFile } from "ep.uni.util"
 
 /**
  * Start 命名空间处理所有启动相关的操作。
+ * 提供目标程序的启动、参数配置等功能。
+ * @namespace
  */
 export namespace Start {
     /**

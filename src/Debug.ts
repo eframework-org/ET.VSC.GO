@@ -10,6 +10,8 @@ import { Target } from "./Define"
 
 /**
  * Debug 命名空间处理所有调试相关的操作。
+ * 提供目标程序的调试、断点管理等功能。
+ * @namespace
  */
 export namespace Debug {
     /**
