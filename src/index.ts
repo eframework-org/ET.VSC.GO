@@ -88,7 +88,7 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
     return new Promise<Target[]>((resolve, reject) => {
         try {
             const proj = vscode.workspace.rootPath
-            const file = XFile.PathJoin(XEnv.DataPath, "selected.prefs")
+            const file = XFile.PathJoin(XEnv.LocalPath, "Selected.prefs")
             const labels = new Array<string>()
             targets.forEach(v => labels.push(v.ID))
 
