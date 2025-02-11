@@ -13,43 +13,43 @@ import { Build } from "./Build"
 import { Debug } from "./Debug"
 import { Start } from "./Start"
 import { Stop } from "./Stop"
-import { Target } from "./Define"
+import { Project } from "./Define"
 
 /** 插件支持的命令列表。 */
 const Commands = [
     {
-        ID: `${XEnv.Identifier}.buildTarget`,
-        /** 处理构建目标的命令。 */
+        ID: `${XEnv.Identifier}.buildProject`,
+        /** 处理构建项目的命令。 */
         Handler: async () => {
-            const targets = await Selects("build", "release")
-            await Build.Process(targets, false)
+            const projects = await Selects("build", "release")
+            await Build.Process(projects, false)
         }
     },
     {
-        ID: `${XEnv.Identifier}.startTarget`,
-        /** 处理启动目标的命令。 */
+        ID: `${XEnv.Identifier}.startProject`,
+        /** 处理启动项目的命令。 */
         Handler: async () => {
-            const targets = await Selects("start", "release", GoArch(), GoPlat())
-            await Stop.Process(targets)
-            await Start.Process(targets)
+            const projects = await Selects("start", "release", GoArch(), GoPlat())
+            await Stop.Process(projects)
+            await Start.Process(projects)
         }
     },
     {
-        ID: `${XEnv.Identifier}.stopTarget`,
-        /** 处理停止目标的命令。 */
+        ID: `${XEnv.Identifier}.stopProject`,
+        /** 处理停止项目的命令。 */
         Handler: async () => {
-            const targets = await Selects("stop", "debug", GoArch(), GoPlat())
-            await Stop.Process(targets)
+            const projects = await Selects("stop", "debug", GoArch(), GoPlat())
+            await Stop.Process(projects)
         }
     },
     {
-        ID: `${XEnv.Identifier}.debugTarget`,
-        /** 处理调试目标的命令。 */
+        ID: `${XEnv.Identifier}.debugProject`,
+        /** 处理调试项目的命令。 */
         Handler: async () => {
-            const targets = await Selects("debug", "debug", GoArch(), GoPlat())
-            await Stop.Process(targets)
-            await Build.Process(targets, true)
-            await Debug.Process(targets)
+            const projects = await Selects("debug", "debug", GoArch(), GoPlat())
+            await Stop.Process(projects)
+            await Build.Process(projects, true)
+            await Debug.Process(projects)
         }
     },
     {
@@ -72,30 +72,30 @@ const Commands = [
     }
 ]
 
-/** 已加载的目标配置列表。 */
-const targets = new Array<Target>()
+/** 已加载的项目配置列表。 */
+const projects = new Array<Project>()
 
-/** 目标选择器实例。 */
+/** 项目选择器实例。 */
 var selector: vscode.QuickPick<vscode.QuickPickItem>
 
 /**
- * 选择目标配置。
+ * 选择项目配置。
  * @param action 当前操作名称。
  * @param matchs 匹配条件数组。
- * @returns 返回选中的目标配置数组。
+ * @returns 返回选中的项目配置数组。
  */
-async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
-    return new Promise<Target[]>((resolve, reject) => {
+async function Selects(action: string, ...matchs: string[]): Promise<Project[]> {
+    return new Promise<Project[]>((resolve, reject) => {
         try {
             const proj = vscode.workspace.rootPath
             const file = XFile.PathJoin(XEnv.LocalPath, "Selected.prefs")
             const labels = new Array<string>()
-            targets.forEach(v => labels.push(v.ID))
+            projects.forEach(v => labels.push(v.ID))
 
             /**
-             * 获取本地已选择的目标配置。
-             * @param raws 原始目标配置列表。
-             * @returns 返回已选择的目标配置列表。
+             * 获取本地已选择的项目配置。
+             * @param raws 原始项目配置列表。
+             * @returns 返回已选择的项目配置列表。
              */
             function getLocalSelected(raws: readonly vscode.QuickPickItem[]): readonly vscode.QuickPickItem[] {
                 if (XFile.HasFile(file)) {
@@ -130,8 +130,8 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
             }
 
             /**
-             * 保存本地选择的目标配置。
-             * @param raws 需要保存的目标配置列表。
+             * 保存本地选择的项目配置。
+             * @param raws 需要保存的项目配置列表。
              */
             function saveLocal(raws: readonly vscode.QuickPickItem[]) {
                 let allObjs = {}
@@ -148,11 +148,11 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
             }
 
             /**
-             * 根据匹配条件过滤目标配置。
-             * @returns 返回符合条件的目标配置列表。
+             * 根据匹配条件过滤项目配置。
+             * @returns 返回符合条件的项目配置列表。
              */
-            function filterTargets(): string[] {
-                const targets = new Array<string>()
+            function filterProjects(): string[] {
+                const filter = new Array<string>()
                 for (let i = 0; i < labels.length; i++) {
                     let s = labels[i]
                     let matched = true
@@ -172,23 +172,23 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
                             }
                         }
                     }
-                    if (matched) targets.push(s)
+                    if (matched) filter.push(s)
                 }
-                return targets
+                return filter
             }
 
             /**
-             * 处理目标选择确认事件。
+             * 处理项目选择确认事件。
              */
             function onDidAccept() {
                 if (selector.selectedItems) {
-                    const selected = new Array<Target>()
+                    const selected = new Array<Project>()
                     for (let i = 0; i < selector.selectedItems.length; i++) {
                         const label = selector.selectedItems[i].label
-                        for (let j = 0; j < targets.length; j++) {
-                            const target = targets[j]
-                            if (target.ID == label) {
-                                selected.push(target)
+                        for (let j = 0; j < projects.length; j++) {
+                            const project = projects[j]
+                            if (project.ID == label) {
+                                selected.push(project)
                                 break
                             }
                         }
@@ -205,8 +205,8 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
             } else {
                 selector = vscode.window.createQuickPick()
                 selector.canSelectMany = true
-                selector.placeholder = XString.Format("Select target(s) to {0}.", action)
-                selector.items = filterTargets().map(label => ({ label }))
+                selector.placeholder = XString.Format("Select project(s) to {0}.", action)
+                selector.items = filterProjects().map(label => ({ label }))
                 selector.selectedItems = getLocalSelected(selector.items)
                 selector.onDidAccept(onDidAccept)
                 selector.onDidHide(() => {
@@ -220,8 +220,8 @@ async function Selects(action: string, ...matchs: string[]): Promise<Target[]> {
 }
 
 /**
- * 获取当前 Go 环境的目标架构。
- * @returns 返回目标架构字符串。
+ * 获取当前 Go 环境的项目架构。
+ * @returns 返回项目架构字符串。
  */
 function GoArch(): string {
     // nodejs-arch:'arm'、'arm64'、'ia32'、'mips'、'mipsel'、'ppc'、'ppc64'、's390'、's390x'、'x64'
@@ -232,8 +232,8 @@ function GoArch(): string {
 }
 
 /**
- * 获取当前 Go 环境的目标平台。
- * @returns 返回目标平台字符串。
+ * 获取当前 Go 环境的项目平台。
+ * @returns 返回项目平台字符串。
  */
 function GoPlat(): string { return process.platform == "win32" ? "windows" : process.platform }
 
@@ -246,21 +246,21 @@ export function activate(context: vscode.ExtensionContext) {
      * 解析并加载配置。
      */
     function parseConfig() {
-        targets.length = 0
+        projects.length = 0
         const config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(XEnv.Identifier)
         const projectList: any = config.get("projectList")
         if (projectList) {
             for (const name in projectList) {
                 if (name == "$name") continue
-                const otarget = projectList[name]
-                const temp = new Map<string, Target>()
-                for (const key in otarget) {
-                    const raw: Target = otarget[key]
+                const oproject = projectList[name]
+                const temp = new Map<string, Project>()
+                for (const key in oproject) {
+                    const raw: Project = oproject[key]
                     const base = temp.get(raw["extends"])
-                    const scheme = new Target(name, key, base, raw)
+                    const scheme = new Project(name, key, base, raw)
                     temp.set(key, scheme)
-                    if (targets.find(v => v.ID == scheme.ID) == null) {
-                        targets.push(scheme)
+                    if (projects.find(v => v.ID == scheme.ID) == null) {
+                        projects.push(scheme)
                     }
                 }
             }

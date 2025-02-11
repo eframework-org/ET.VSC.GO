@@ -5,20 +5,20 @@
 import { XString } from "ep.uni.util"
 
 /**
- * Target 类定义了构建和调试目标的配置结构。
- * 用于管理目标的所有配置属性，支持配置继承。
+ * Project 类定义了构建和调试项目的配置结构。
+ * 用于管理项目的所有配置属性，支持配置继承。
  */
-export class Target {
-    /** 目标名称。 */
+export class Project {
+    /** 项目名称。 */
     protected name: string
 
-    /** 目标键名。 */
+    /** 项目键名。 */
     protected key: string
 
-    /** 目标架构。 */
+    /** 项目架构。 */
     protected arch: string
 
-    /** 目标平台。 */
+    /** 项目平台。 */
     protected os: string
 
     /** 源码路径。 */
@@ -49,13 +49,13 @@ export class Target {
     protected dlvFlags: string[]
 
     /**
-     * 创建目标配置实例。
-     * @param name 目标名称。
+     * 创建项目配置实例。
+     * @param name 项目名称。
      * @param key 配置键名。
      * @param base 基础配置（用于继承）。
      * @param raw 原始配置数据。
      */
-    constructor(name: string, key: string, base: Target, raw: Target) {
+    constructor(name: string, key: string, base: Project, raw: Project) {
         // 继承基础配置
         if (base) {
             for (let k in base) {
@@ -70,16 +70,16 @@ export class Target {
         this.key = key
     }
 
-    /** 获取目标的完整标识符，格式为 "name.key"。 */
+    /** 获取项目的完整标识符，格式为 "name.key"。 */
     public get ID(): string { return XString.Format("{0}.{1}", this.name, this.key) }
 
-    /** 获取目标名称。 */
+    /** 获取项目名称。 */
     public get Name(): string { return this.name }
 
-    /** 获取目标架构。 */
+    /** 获取项目架构。 */
     public get Arch(): string { return this.arch }
 
-    /** 获取目标平台。 */
+    /** 获取项目平台。 */
     public get Os(): string { return this.os }
 
     /** 获取源码路径。 */

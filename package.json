@@ -44,23 +44,23 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "et-vsc-go.buildTarget",
-				"title": "Build Target(s)",
+				"command": "et-vsc-go.buildProject",
+				"title": "Build Project(s)",
 				"category": "ECode Go"
 			},
 			{
-				"command": "et-vsc-go.startTarget",
-				"title": "Start Target(s)",
+				"command": "et-vsc-go.startProject",
+				"title": "Start Project(s)",
 				"category": "ECode Go"
 			},
 			{
-				"command": "et-vsc-go.stopTarget",
-				"title": "Stop Target(s)",
+				"command": "et-vsc-go.stopProject",
+				"title": "Stop Project(s)",
 				"category": "ECode Go"
 			},
 			{
-				"command": "et-vsc-go.debugTarget",
-				"title": "Debug Target(s)",
+				"command": "et-vsc-go.debugProject",
+				"title": "Debug Project(s)",
 				"category": "ECode Go"
 			},
 			{
@@ -71,19 +71,19 @@
 		],
 		"keybindings": [
 			{
-				"command": "et-vsc-go.buildTarget",
+				"command": "et-vsc-go.buildProject",
 				"key": "ALT+SHIFT+A"
 			},
 			{
-				"command": "et-vsc-go.startTarget",
+				"command": "et-vsc-go.startProject",
 				"key": "ALT+SHIFT+S"
 			},
 			{
-				"command": "et-vsc-go.stopTarget",
+				"command": "et-vsc-go.stopProject",
 				"key": "ALT+SHIFT+D"
 			},
 			{
-				"command": "et-vsc-go.debugTarget",
+				"command": "et-vsc-go.debugProject",
 				"key": "ALT+SHIFT+F"
 			},
 			{
@@ -129,7 +129,7 @@
 							}
 						}
 					},
-					"description": "工程列表。"
+					"description": "项目列表。"
 				}
 			}
 		}

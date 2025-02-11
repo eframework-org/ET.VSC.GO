@@ -6,62 +6,62 @@ import * as vscode from "vscode"
 import * as path from "path"
 import * as child_process from "child_process"
 import { XFile, XLog, XString } from "ep.uni.util"
-import { Target } from "./Define"
+import { Project } from "./Define"
 
 /**
  * Debug 命名空间处理所有调试相关的操作。
- * 提供目标程序的调试、断点管理等功能。
+ * 提供项目的调试、断点管理等功能。
  * @namespace
  */
 export namespace Debug {
     /**
-     * 处理多个目标的调试会话启动。
-     * @param targets 目标配置数组。
+     * 处理多个项目的调试会话启动。
+     * @param projects 项目配置数组。
      * @returns Promise 在所有调试会话启动时解析。
      */
-    export function Process(targets: Target[]) {
-        if (targets == null || targets.length == 0) {
-            XLog.Warn("Debug.Process: no target(s) was selected.")
-            vscode.window.showInformationMessage("No target(s) was selected.")
+    export function Process(projects: Project[]) {
+        if (projects == null || projects.length == 0) {
+            XLog.Warn("Debug.Process: no project(s) was selected.")
+            vscode.window.showInformationMessage("No project(s) was selected.")
         } else {
             return vscode.window.withProgress({
                 location: vscode.ProgressLocation.Notification,
-                title: "Debugging target(s)",
+                title: "Debugging project(s)",
                 cancellable: true
             }, (progress, token) => {
                 return new Promise<void>((resolve, reject) => {
                     let canceled = false
                     token.onCancellationRequested(() => {
                         canceled = true
-                        XLog.Info("Debugging target(s) has been canceled.")
-                        reject("Debugging target(s) has been canceled.")
+                        XLog.Info("Debugging project(s) has been canceled.")
+                        reject("Debugging project(s) has been canceled.")
                     })
 
                     const env = "debug"     // 调试环境标识
-                    const incre = 1 / targets.length * 100  // 每个目标的进度增量
+                    const incre = 1 / projects.length * 100  // 每个项目的进度增量
 
                     /**
-                     * 处理下一个调试目标。
-                     * @param idx 当前处理的目标索引。
+                     * 处理下一个调试项目。
+                     * @param idx 当前处理的项目索引。
                      */
                     function processNext(idx: number) {
                         if (canceled) return
 
                         let root = vscode.workspace.rootPath
-                        let target = targets[idx]
-                        progress.report({ increment: incre, message: XString.Format("{0} ({1} of {2})", target.ID, idx + 1, targets.length) })
+                        let project = projects[idx]
+                        progress.report({ increment: incre, message: XString.Format("{0} ({1} of {2})", project.ID, idx + 1, projects.length) })
 
                         // 准备调试环境和路径
-                        const osarch = XString.Format("{0}_{1}", target.Os, target.Arch)
-                        const exename = target.Os == "windows" ? target.Name + ".exe" : target.Name
-                        const exepath = path.isAbsolute(target.BuildPath) ?
-                            XFile.PathJoin(target.BuildPath, osarch, env, target.Name) :
-                            XFile.PathJoin(root, target.BuildPath, osarch, env, target.Name)
+                        const osarch = XString.Format("{0}_{1}", project.Os, project.Arch)
+                        const exename = project.Os == "windows" ? project.Name + ".exe" : project.Name
+                        const exepath = path.isAbsolute(project.BuildPath) ?
+                            XFile.PathJoin(project.BuildPath, osarch, env, project.Name) :
+                            XFile.PathJoin(root, project.BuildPath, osarch, env, project.Name)
                         const exefile = XFile.PathJoin(exepath, exename)
-                        const targetpath = XFile.NormalizePath(path.isAbsolute(target.ScriptPath) ? target.ScriptPath : XFile.PathJoin(root, target.ScriptPath))
+                        const projpath = XFile.NormalizePath(path.isAbsolute(project.ScriptPath) ? project.ScriptPath : XFile.PathJoin(root, project.ScriptPath))
 
                         // 检查平台兼容性
-                        const cplat = target.Os == "windows" ? "win32" : target.Os
+                        const cplat = project.Os == "windows" ? "win32" : project.Os
                         if (cplat != process.platform) {
                             XLog.Error("debug {0} program on {1} is not supported", cplat, process.platform)
                         } else if (XFile.HasFile(exefile) == false) {
@@ -73,34 +73,34 @@ export namespace Debug {
                                     child_process.execSync(XString.Format("chmod -R 777 {0}", exepath))
                                 }
                             } catch (err) {
-                                XLog.Error("Debug.Process: chmod {0} err: {1}", targetpath, err)
+                                XLog.Error("Debug.Process: chmod {0} err: {1}", projpath, err)
                             }
 
                             // 启动调试会话
                             setTimeout(() => {
                                 vscode.debug.startDebugging(vscode.workspace.workspaceFolders[0], {
-                                    "name": target.ID,
+                                    "name": project.ID,
                                     "type": "go",
                                     "request": "launch",
                                     "mode": "exec",
                                     "program": exefile,
                                     "cwd": exepath,
-                                    "args": target.StartArgs ? target.StartArgs : [],
-                                    "dlvFlags": target.DlvFlags ? target.DlvFlags : [],
+                                    "args": project.StartArgs ? project.StartArgs : [],
+                                    "dlvFlags": project.DlvFlags ? project.DlvFlags : [],
                                 }).then(() => {
-                                    if (idx < targets.length - 1) processNext(idx + 1)
+                                    if (idx < projects.length - 1) processNext(idx + 1)
                                     else {
-                                        vscode.window.showInformationMessage(XString.Format("Debug {0} target(s) done.", targets.length))
+                                        vscode.window.showInformationMessage(XString.Format("Debug {0} project(s) done.", projects.length))
                                         setTimeout(resolve, 800) // 等待进度条显示完成
                                     }
                                 }, () => {
-                                    if (idx < targets.length - 1) processNext(idx + 1)
+                                    if (idx < projects.length - 1) processNext(idx + 1)
                                     else {
-                                        vscode.window.showInformationMessage(XString.Format("Debug {0} target(s) done.", targets.length))
+                                        vscode.window.showInformationMessage(XString.Format("Debug {0} project(s) done.", projects.length))
                                         setTimeout(resolve, 800) // 等待进度条显示完成
                                     }
                                 })
-                            }, target.StartDelay == null || idx == 0 ? 0 : target.StartDelay * 1000)
+                            }, project.StartDelay == null || idx == 0 ? 0 : project.StartDelay * 1000)
                         }
                     }
 
