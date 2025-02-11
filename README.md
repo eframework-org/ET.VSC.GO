@@ -1,7 +1,7 @@
 # ET.VSC.GO
 
-[![Version](https://vsmarketplacebadges.dev/version-short/eframework-org.et-vsc-go.svg)](https://marketplace.visualstudio.com/items?itemName=eframework-org.et-vsc-go)
-[![Installs](https://vsmarketplacebadges.dev/installs-short/eframework-org.et-vsc-go.svg)](https://marketplace.visualstudio.com/items?itemName=eframework-org.et-vsc-go)
+[![Version](https://img.shields.io/visual-studio-marketplace/v/eframework-org.et-vsc-go)](https://marketplace.visualstudio.com/items?itemName=eframework-org.et-vsc-go)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/eframework-org.et-vsc-go)](https://marketplace.visualstudio.com/items?itemName=eframework-org.et-vsc-go)  
 
 VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试等。
 
