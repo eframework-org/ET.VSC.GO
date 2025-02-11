@@ -261,7 +261,7 @@ code --install-extension *.vsix
 ### 3. 发布步骤
 - 更新版本号：`npm version patch/minor/major`
 - 构建发布包：`npm run release`
-- 发布到商店：Run workflow [Publish](https://github.com/eframework-org/ET.VSC.GO/actions/workflows/publish.yml)
+- 发布到商店：Run workflow [Publish](.github/workflows/publish.yml)
 
 ## 相关链接
 

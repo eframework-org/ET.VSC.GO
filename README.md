@@ -14,11 +14,11 @@ VSC.GO 工具优化了 Gopher 们的开发流程，包括快速构建及调试�
 
 ### 功能清单
 
-- Build Project(s)：编译项目 [⎇⇧A]
-- Start Project(s)：运行项目 [⎇⇧S]
-- Stop Project(s)：停止项目 [⎇⇧D]
-- Debug Project(s)：调试项目 [⎇⇧F]
-- Show Command(s)：控制面板 [⎇⇧P]
+- 🔨 Build Project(s)：编译项目 [⌥⇧A]
+- ▶️ Start Project(s)：运行项目 [⌥⇧S]
+- ⏹️ Stop Project(s)：停止项目 [⌥⇧D]
+- 🪲 Debug Project(s)：调试项目 [⌥⇧F]
+- 🎮 Show Command(s)：控制面板 [⌥⇧P]
 
 ### 配置说明
 
